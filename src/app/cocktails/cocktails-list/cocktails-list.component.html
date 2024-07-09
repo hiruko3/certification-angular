@@ -1,0 +1,7 @@
+<div class="flex-1 flex-row flex-space-around">
+  @for (cocktail of cocktails; track cocktail.id) {
+    <app-cocktail [cocktail]="cocktail"></app-cocktail>
+  } @empty {
+    <mat-progress-bar></mat-progress-bar>
+  }
+</div>

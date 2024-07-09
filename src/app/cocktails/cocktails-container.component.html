@@ -1,0 +1,5 @@
+<div class="main-center flex-column">
+  <app-cocktail-filter (filter)="filterCocktailList($event)"></app-cocktail-filter>
+  <app-cocktails-list [cocktails]="cocktailsListFiltered"></app-cocktails-list>
+</div>
+

@@ -1,0 +1,29 @@
+<button mat-flat-button (click)="navigateBack()">
+  <mat-icon>home</mat-icon>
+  Back
+</button>
+@if (cocktail) {
+  <mat-card class="cocktail-card">
+    <mat-card-content class="flex-row">
+      <div class="flex-row">
+        <img ngSrc="{{cocktail.imageUrl}}" [width]="120" [height]="120" alt="cocktailImg" priority>
+        <div class="flex-1"></div>
+        <app-favorite-cocktail [cocktail]="cocktail"></app-favorite-cocktail>
+      </div>
+      <span><h2>{{ cocktail.name }}</h2></span>
+      <app-badge-alcoholic [isAlcoholic]="cocktail.isAlcoholic"></app-badge-alcoholic>
+      <mat-divider></mat-divider>
+      <span><b>Ingredients: </b></span>
+      @for (ingredient of cocktail.ingredients; track cocktail.id; let first = $first) {
+        @if (!first) {
+          |
+        }
+        <span>{{ ingredient }}</span>
+      }
+      <mat-divider></mat-divider>
+      <span><b>Instructions: </b></span>
+      <span>{{ cocktail.instructions }}</span>
+    </mat-card-content>
+  </mat-card>
+}
+

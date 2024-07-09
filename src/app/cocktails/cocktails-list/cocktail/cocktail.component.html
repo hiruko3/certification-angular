@@ -1,0 +1,22 @@
+@if (cocktail) {
+  <mat-card class="cocktail-card">
+    <mat-card-header class="space-between">
+      <img ngSrc="{{cocktail.imageUrl}}" [width]="120" [height]="120" alt="cocktailImg" priority>
+      <div class="flex-1"></div>
+      <app-favorite-cocktail [cocktail]="cocktail"></app-favorite-cocktail>
+    </mat-card-header>
+    <mat-card-content>
+      <span class="pointer" [routerLink]='cocktail.id'>
+        <h1>{{ cocktail.name }}</h1>
+      </span>
+      <app-badge-alcoholic [isAlcoholic]="cocktail.isAlcoholic"></app-badge-alcoholic>
+      <mat-divider></mat-divider>
+        @for (ingredient of cocktail.ingredients; track $index; let first = $first) {
+          @if (!first) {
+            |
+          }
+          {{ ingredient }}
+        }
+    </mat-card-content>
+  </mat-card>
+}
