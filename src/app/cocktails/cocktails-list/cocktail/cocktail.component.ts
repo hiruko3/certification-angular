@@ -30,7 +30,4 @@ import {RouterLink} from "@angular/router";
 export class CocktailComponent{
 
   @Input() cocktail: Cocktail | undefined;
-
-
-
 }

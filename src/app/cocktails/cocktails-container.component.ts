@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit} from '@angular/core';
+import {ChangeDetectionStrategy, Component, computed, OnInit, Signal, signal} from '@angular/core';
 import {Cocktail} from "../model/cocktail.model";
 import {CocktailComponent} from "./cocktails-list/cocktail/cocktail.component";
 import {CocktailStateService} from "./service/cocktail-state.service";
@@ -20,47 +20,45 @@ import {CocktailsListComponent} from "./cocktails-list/cocktails-list.component"
 export class CocktailsContainerComponent implements OnInit {
 
   /**
-   * cocktails list that is displayed in html and retrieve from mock
+   * The cocktail list filtered from the CocktailFilterComponent user's input
    */
-  cocktailsList: Cocktail[] = [];
-  /**
-   * The list above filtered from the CocktailFilterComponent user's input
-   */
-  cocktailsListFiltered: Cocktail[] = [];
+  cocktailsListFiltered$: Signal<Cocktail[]> = signal([]);
 
   /**
-   * Inject dependecies
-   * @param cocktailStateService
-   * @param cd
+   * the filter's value
+   * @private
    */
-  constructor(private cocktailStateService: CocktailStateService, private cd: ChangeDetectorRef) {
+  private valueToFilter: string = '';
+
+  /**
+   * Inject dependencies
+   * @param cocktailStateService
+   */
+  constructor(private cocktailStateService: CocktailStateService) {
   }
 
   /**
-   * Parent that holds the responsibility to load data then share the data with its childs
+   * Parent that holds the responsibility to load data then share the data with its children
    * No directly connected to the httpClient service, it uses cocktailStateService that handles
    * business logic
    */
   ngOnInit(): void {
-    this.cocktailStateService.getAllCocktails().subscribe((cocktails: Cocktail[]) => {
-      this.cd.markForCheck();
-      // we keep the original data to filter
-      this.cocktailsList = [...cocktails];
-      this.cocktailsListFiltered = [...cocktails];
-    })
+    this.cocktailsListFiltered$ = this.cocktailStateService.getAllCocktails();
   }
 
+  /**
+   * When user type something, we filter the list no case-sensitive and compare
+   * the text and the name of the cocktail
+   */
+  filterCocktailList = () => computed((): Cocktail[] => {
+      return this.cocktailsListFiltered$().filter((cocktail: Cocktail): boolean => cocktail.name.toLowerCase().includes(this.valueToFilter.toLowerCase()))
+  });
 
   /**
-   * When user type something, we
-   * @param text
+   * Save the filter's value emits by the filter
+   * @param value
    */
-  filterCocktailList(text: string): void {
-    if(text) {
-      this.cocktailsListFiltered = this.cocktailsList.filter((cocktail: Cocktail) => cocktail.name?.toLowerCase().includes(text.toLowerCase()));
-    } else{
-      // we reset the list when no filter is given
-      this.cocktailsListFiltered = [...this.cocktailsList];
-    }
+  sendValueToFilter(value: string): void {
+    this.valueToFilter = value;
   }
 }

@@ -1,6 +1,5 @@
-import {Injectable} from '@angular/core';
+import {Injectable, Signal, signal, WritableSignal} from '@angular/core';
 import {Cocktail} from "../../model/cocktail.model";
-import {BehaviorSubject, Observable} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -11,36 +10,35 @@ export class CocktailStateService {
   }
 
   private cocktails: Cocktail[];
-  private cocktails$: BehaviorSubject<Cocktail[]> = new BehaviorSubject<Cocktail[]>([]);
+  private cocktails$: WritableSignal<Cocktail[]> = signal([]);
 
   /**
    * Init the cocktails and add them as favorite if stored in the localStorage
    * @param cocktails
    */
   public initCocktails(cocktails: Cocktail[]) {
-    this.addFavoriteCocktailFromStorage(cocktails);
     this.cocktails = cocktails;
-    this.cocktails$.next(this.cocktails);
+    this.cocktails$.set(this.cocktails);
   }
 
   /**
-   * Get all cocktails and subscribes to it
+   * Get all cocktails as readOnly to protect direct access to the data
+   * and force the use of methods designed for it
    */
-  getAllCocktails(): Observable<Cocktail[]> {
-    return this.cocktails$.asObservable();
+  getAllCocktails(): Signal<Cocktail[]> {
+    this.addFavoriteCocktailFromStorage(this.cocktails);
+    return this.cocktails$.asReadonly();
   }
 
   /**
    * When user click on the star, we add or remove, depends on the actual state, the cocktail from
-   * the favorite list, we then add it to the localStorage
-   * Not emitting, noone care about that changes, and we lose the filter if we broadcast the change
-   * @param cocktailId
+   * the favorite list
+   * We add it to the localStorage
+   * Not emitting, no one care about that changes into the localStorage
+   * @param cocktail
    */
-  changeFavoriteCocktail(cocktailId: string): void {
-    let cocktail: Cocktail | undefined = this.cocktails.find((cocktail: Cocktail): boolean => cocktail.id === cocktailId)
-    if (cocktail) {
-      this.addOrRemoveLocalStorageIfFavorite(cocktail);
-    }
+  storeIfFavoriteCocktail(cocktail: Cocktail): void {
+    this.addOrRemoveLocalStorageIfFavorite(cocktail);
   }
 
   /**
@@ -72,14 +70,12 @@ export class CocktailStateService {
   }
 
   /**
-   * Update the cocktail in the cache list if needed when the user update a cocktail outside the list
-   * For exemple, on the /details cocktail we need to update the list too
+   * Update the cocktail in the cache list when the user update a cocktail (click on the star here)
+   *
    * @param cocktailUpdatedFromStar
    */
-  updateCocktailIfNeeded(cocktailUpdatedFromStar: Cocktail): void {
-    let cocktail: Cocktail | undefined = this.cocktails.find((cocktail: Cocktail): boolean => cocktail.id === cocktailUpdatedFromStar.id)
-    if(cocktail && (cocktail.isFavorite !== cocktailUpdatedFromStar.isFavorite)) {
-      cocktail.isFavorite = cocktailUpdatedFromStar.isFavorite
-    }
+  updateCocktail(cocktailUpdatedFromStar: Cocktail): void {
+    this.cocktails$.update((cocktails: Cocktail[]) => cocktails.map((cocktail: Cocktail): Cocktail =>
+      cocktail.id === cocktailUpdatedFromStar.id ? cocktailUpdatedFromStar : cocktail));
   }
 }

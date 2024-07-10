@@ -22,13 +22,13 @@ export class FavoriteCocktailComponent {
   }
 
   /**
-   * When user click on the starn we add or remove the cocktail from the favorite list
+   * When user click on the star we add or remove the cocktail from the favorite list
    *
-   * @param cocktailId
+   * @param cocktail
    */
-  addOrRemoveFromFavorite(cocktailId: string): void {
-    this.cocktail.isFavorite = !this.cocktail.isFavorite;
-    this.cocktailStateService.changeFavoriteCocktail(cocktailId);
-    this.cocktailStateService.updateCocktailIfNeeded(this.cocktail);
+  addOrRemoveFromFavorite(cocktail: Cocktail): void {
+    cocktail.isFavorite = !cocktail.isFavorite;
+    this.cocktailStateService.storeIfFavoriteCocktail(cocktail);
+    this.cocktailStateService.updateCocktail(cocktail);
   }
 }
