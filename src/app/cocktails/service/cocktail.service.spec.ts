@@ -1,12 +1,16 @@
 import { TestBed } from '@angular/core/testing';
 
 import { CocktailService } from './cocktail.service';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('CocktailService', () => {
   let service: CocktailService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CocktailService]
+    });
     service = TestBed.inject(CocktailService);
   });
 

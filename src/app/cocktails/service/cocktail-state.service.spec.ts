@@ -1,12 +1,16 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { CocktailStateService } from './cocktail-state.service';
+import {CocktailStateService} from './cocktail-state.service';
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('CocktailStateService', () => {
   let service: CocktailStateService;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [CocktailStateService]
+    });
     service = TestBed.inject(CocktailStateService);
   });
 

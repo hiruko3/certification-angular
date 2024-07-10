@@ -1,6 +1,8 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CocktailDetailsComponent } from './cocktail-details.component';
+import {CocktailDetailsComponent} from './cocktail-details.component';
+import {RouterTestingModule} from "@angular/router/testing";
+import {HttpClientTestingModule} from "@angular/common/http/testing";
 
 describe('CocktailDetailsComponent', () => {
   let component: CocktailDetailsComponent;
@@ -8,10 +10,10 @@ describe('CocktailDetailsComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CocktailDetailsComponent]
+      imports: [CocktailDetailsComponent, RouterTestingModule, HttpClientTestingModule]
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(CocktailDetailsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

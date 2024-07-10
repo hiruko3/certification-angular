@@ -1,6 +1,7 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { CocktailsContainerComponent } from './cocktails-container.component';
+import {CocktailsContainerComponent} from './cocktails-container.component';
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 describe('CocktailsListComponent', () => {
   let component: CocktailsContainerComponent;
@@ -8,7 +9,7 @@ describe('CocktailsListComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [CocktailsContainerComponent]
+      imports: [CocktailsContainerComponent, BrowserAnimationsModule]
     })
     .compileComponents();
 

@@ -62,7 +62,7 @@ export class CocktailStateService {
    * @private
    */
   public addFavoriteCocktailFromStorage(cocktails: Cocktail[]): void {
-    cocktails.forEach((cocktail: Cocktail): void => {
+    cocktails?.forEach((cocktail: Cocktail): void => {
       if (localStorage.getItem(cocktail.id)) {
         cocktail.isFavorite = true;
       }
